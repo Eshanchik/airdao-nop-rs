@@ -1,4 +1,4 @@
-name: Build Rust Binary
+name: Build and Upload Rust Binary
 
 on:
   push:
@@ -18,23 +18,34 @@ jobs:
     - name: Set up Rust
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: 1.81
+        toolchain: 1.81  # или 1.81, если нужен конкретный
         override: true
         components: rustfmt, clippy
 
-    - name: Cache cargo registry and dependencies
+    # Кешируем зависимости Cargo для ускорения сборки
+    - name: Cache cargo registry and git dependencies
       uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
 
+    # Устанавливаем зависимости
+    - name: Install system dependencies
+      run: sudo apt-get update && sudo apt-get install -y lsb-release ca-certificates libssl-dev pkg-config git
+
+    # Сборка бинарника с копированием всех необходимых файлов
     - name: Build binary
-      run: cargo build --release
+      run: |
+        git submodule update --init --recursive  # если у вас используются git-сабмодули
+        cargo build --release
 
+    # Загружаем бинарник как артефакт
     - name: Upload binary to artifacts
       uses: actions/upload-artifact@v3
       with:
         name: rust-binary
-        path: target/release/airdao-nop-rs
+        path: target/release/airdao-nop-rs  # Замените "your-binary" на имя вашего бинарного файла
