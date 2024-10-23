@@ -6,6 +6,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  OPENSSL_DIR: /usr
 
 jobs:
   build:
@@ -19,8 +20,9 @@ jobs:
 
     - name: Install Dependencies
       run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu libssl-dev pkg-config
+        sudo apt-get update
+        sudo apt-get install -y gcc-aarch64-linux-gnu libssl-dev
+        sudo apt-get install -y libssl-dev:arm64
 
     - name: Set up Rust
       uses: actions-rs/toolchain@v1
@@ -43,8 +45,6 @@ jobs:
     - name: Build binary
       run: |
         git submodule update --init --recursive
-        export OPENSSL_DIR=/usr
-        export PKG_CONFIG_PATH=/usr/lib/pkgconfig
         RUSTFLAGS='-C link-arg=-s' cargo build --release --target aarch64-unknown-linux-gnu
 
     - name: Get release
