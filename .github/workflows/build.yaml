@@ -61,6 +61,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: target/release/your-binary  # Путь до вашего бинарника
+        asset_path: target/release/airdao-nop-rs  # Путь до вашего бинарника
         asset_name: airdao-nop-release-${{ env.OS_NAME }}  # Динамическое название файла
         asset_content_type: application/octet-stream
