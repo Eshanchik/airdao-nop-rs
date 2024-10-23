@@ -1,12 +1,11 @@
 name: Build and Upload Rust Binary
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  release:
+    types: [published]
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
   build:
@@ -21,10 +20,7 @@ jobs:
         toolchain: 1.81
         override: true
         components: rustfmt, clippy
-
-    - name: Get OS info
-      id: os
-      run: echo "OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        target: airdao-nop-rs
 
     - name: Cache cargo registry and git dependencies
       uses: actions/cache@v3
@@ -36,31 +32,23 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-cargo-
 
-    - name: Install system dependencies
-      run: sudo apt-get update && sudo apt-get install -y lsb-release ca-certificates libssl-dev pkg-config git
-
     - name: Build binary
       run: |
         git submodule update --init --recursive
-        RUSTFLAGS='-C link-arg=-s' cargo build --release
+        RUSTFLAGS='-C link-arg=-s' cargo build --release -target airdao-nop
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: "v1.0.02"  # Фиксированный тег или можно сделать динамическим
-        release_name: "Release 1.0.02"
-        draft: false
-        prerelease: false
+    - name: ls
+      run: ls target/airdao-nop/release/
+
+    - name: Archive 
+      run: zip -j airdao-nop-rs-ubuntu.zip target/airdao-nop/release/airdao-nop-rs
 
     - name: Upload to Release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: target/release/airdao-nop-rs  # Путь до вашего бинарника
-        asset_name: airdao-nop-release-${{ env.OS_NAME }}  # Динамическое название файла
-        asset_content_type: application/octet-stream
+        upload_url: ${{ steps.get_release.outputs.upload_url }} 
+        asset_path: ./airdao-nop-rs-ubuntu.zip  # Путь до вашего бинарника
+        asset_name: airdao-nop-release-${{ env.RELEASE_VERSION }}.zip  # Динамическое название файла
+        asset_content_type: application/zip
