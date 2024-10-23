@@ -1,5 +1,5 @@
 {
-  "discordWebhookUrl": null,
+  "discordWebhookUrl": "",
   "networks": {
     "main": {
       "name": "main",

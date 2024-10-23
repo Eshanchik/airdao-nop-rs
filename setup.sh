@@ -9,7 +9,8 @@ apt-get install -y \
     pkg-config \
     ca-certificates \
     git \
-    jq
+    jq \
+    unzip
 
 # Install Docker and Docker Compose
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
