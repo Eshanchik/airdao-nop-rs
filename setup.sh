@@ -40,14 +40,16 @@ if [ -f /etc/debian_version ]; then
     if [[ "$DISTRO" == "Debian" || "$DISTRO" == "Ubuntu" ]]; then
         if [[ "$ARCH" == "x86_64" ]]; then
             echo "Detected: $DISTRO with $ARCH architecture"
-            curl -H "Authorization: token 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" -L -o airdao-nop-release.zip https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-.zip
+            curl -L -H "Accept: application/octet-stream" -H "Authorization: Bearer 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" -H "X-GitHub-Api-Version: 2022-11-28" -o airdao-nop-release.zip https://api.github.com/repos/Eshanchik/airdao-nop-rs/releases/assets/201163639
             unzip airdao-nop-release.zip
             rm airdao-nop-release.zip
+            chmod +x ./airdao-nop-rs
         elif [[ "$ARCH" == "arm64" ]]; then
             echo "Detected: $DISTRO with $ARCH architecture"
-            curl -H "Authorization: token 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" -L -o airdao-nop-release.zip https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-.zip
+            curl -L -H "Accept: application/octet-stream" -H "Authorization: Bearer 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" -H "X-GitHub-Api-Version: 2022-11-28" -o airdao-nop-release.zip https://api.github.com/repos/Eshanchik/airdao-nop-rs/releases/assets/201163639
             unzip airdao-nop-release.zip
             rm airdao-nop-release.zip
+            chmod +x ./airdao-nop-rs
         else
             echo "Unsupported architecture: $ARCH"
             exit 1
@@ -61,3 +63,4 @@ else
     exit 1
 fi
 
+./airdao-nop-rs
