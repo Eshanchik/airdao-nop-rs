@@ -31,20 +31,18 @@ cd airdao-nop || return
 
 ./update.sh
 
-# Check OS and download the appropriate binary
+# Verify that the system is based on Debian or Ubuntu
 if [ -f /etc/debian_version ]; then
     DISTRO=$(lsb_release -is)
     ARCH=$(uname -m)
 
     if [[ "$DISTRO" == "Debian" || "$DISTRO" == "Ubuntu" ]]; then
         if [[ "$ARCH" == "x86_64" ]]; then
-            echo "Detected $DISTRO with architecture $ARCH"
-            # Download binary for Debian/Ubuntu x86_64
-            curl -L -o airdao-nop-release https://your-link-to-binary/airdao-nop-release-x86_64
+            echo "Detected: $DISTRO with $ARCH architecture"
+            curl -L -o airdao-nop-release https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-.zip
         elif [[ "$ARCH" == "arm64" ]]; then
-            echo "Detected $DISTRO with architecture $ARCH"
-            # Download binary for Debian/Ubuntu arm64
-            curl -L -o airdao-nop-release https://your-link-to-binary/airdao-nop-release-arm64
+            echo "Detected: $DISTRO with $ARCH architecture"
+            curl -L -o airdao-nop-release https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-.zip
         else
             echo "Unsupported architecture: $ARCH"
             exit 1
@@ -54,6 +52,7 @@ if [ -f /etc/debian_version ]; then
         exit 1
     fi
 else
-    echo "This script supports only Debian/Ubuntu systems."
+    echo "This script only supports Debian/Ubuntu based systems."
     exit 1
 fi
+
