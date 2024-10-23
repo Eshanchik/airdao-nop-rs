@@ -29,6 +29,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 git clone https://github.com/Eshanchik/airdao-nop-rs.git
 cd airdao-nop-rs || return
 
+chmod +x update.sh
 ./update.sh
 
 # Verify that the system is based on Debian or Ubuntu
