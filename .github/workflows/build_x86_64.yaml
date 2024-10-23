@@ -14,6 +14,7 @@ jobs:
     strategy:
       matrix:
         target: [x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu]
+
     steps:
     - uses: actions/checkout@v3
 
@@ -24,6 +25,10 @@ jobs:
         override: true
         components: rustfmt, clippy
         target: ${{ matrix.target }}
+
+    - name: Install AArch64 cross-compiler
+      if: matrix.target == 'aarch64-unknown-linux-gnu'
+      run: sudo apt-get install -y gcc-aarch64-linux-gnu
 
     - name: Cache cargo registry, git dependencies, and target
       uses: actions/cache@v3
