@@ -37,8 +37,14 @@ jobs:
         git submodule update --init --recursive
         RUSTFLAGS='-C link-arg=-s' cargo build --release --target x86_64-unknown-linux-gnu
 
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
     - name: ls
-      run: ls
+      run: ls target/x86_64-unknown-linux-gnu/release/
 
     - name: Archive 
       run: zip -j airdao-nop-rs-ubuntu.zip target/x86_64-unknown-linux-gnu/release/airdao-nop-rs
