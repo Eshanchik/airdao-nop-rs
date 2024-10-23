@@ -39,10 +39,14 @@ if [ -f /etc/debian_version ]; then
     if [[ "$DISTRO" == "Debian" || "$DISTRO" == "Ubuntu" ]]; then
         if [[ "$ARCH" == "x86_64" ]]; then
             echo "Detected: $DISTRO with $ARCH architecture"
-            curl -L -o airdao-nop-release https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-.zip
+            curl -L -o airdao-nop-release.zip https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-x86_64.zip
+            unzip airdao-nop-release.zip
+            rm airdao-nop-release.zip
         elif [[ "$ARCH" == "arm64" ]]; then
             echo "Detected: $DISTRO with $ARCH architecture"
-            curl -L -o airdao-nop-release https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-.zip
+            curl -L -o airdao-nop-release.zip https://github.com/Eshanchik/airdao-nop-rs/releases/download/v1.0.7/airdao-nop-release-arm64.zip
+            unzip airdao-nop-release.zip
+            rm airdao-nop-release.zip
         else
             echo "Unsupported architecture: $ARCH"
             exit 1
