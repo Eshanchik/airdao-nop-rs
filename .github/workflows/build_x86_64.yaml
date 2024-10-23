@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        target: [x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu]
     steps:
     - uses: actions/checkout@v3
 
@@ -20,22 +23,24 @@ jobs:
         toolchain: 1.81
         override: true
         components: rustfmt, clippy
-        target: x86_64-unknown-linux-gnu
+        target: ${{ matrix.target }}
 
-    - name: Cache cargo registry and git dependencies
+    - name: Cache cargo registry, git dependencies, and target
       uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
+          target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
         restore-keys: |
           ${{ runner.os }}-cargo-
 
     - name: Build binary
       run: |
+        set -x
         git submodule update --init --recursive
-        RUSTFLAGS='-C link-arg=-s' cargo build --release --target x86_64-unknown-linux-gnu
+        RUSTFLAGS='-C link-arg=-s' cargo build --release --target ${{ matrix.target }}
 
     - name: Get release
       id: get_release
@@ -45,10 +50,10 @@ jobs:
 
     - name: Set Release Version
       id: set_version
-      run: echo "RELEASE_VERSION=${{ github.event.release.tag_name }}-x86_64" >> $GITHUB_ENV
+      run: echo "RELEASE_VERSION=${{ github.event.release.tag_name }}-${{ matrix.target }}" >> $GITHUB_ENV
 
-    - name: Archive 
-      run: zip -j airdao-nop-rs-ubuntu.zip target/x86_64-unknown-linux-gnu/release/airdao-nop-rs
+    - name: Create Release Archive
+      run: zip -j airdao-nop-rs-${{ matrix.target }}.zip target/${{ matrix.target }}/release/airdao-nop-rs
 
     - name: Upload to Release
       uses: actions/upload-release-asset@v1
@@ -56,6 +61,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }} 
-        asset_path: ./airdao-nop-rs-ubuntu.zip
+        asset_path: ./airdao-nop-rs-${{ matrix.target }}.zip
         asset_name: airdao-nop-release-${{ env.RELEASE_VERSION }}.zip
         asset_content_type: application/zip
