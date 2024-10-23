@@ -26,8 +26,8 @@ apt-get install -y \
 curl -L https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-git clone https://github.com/ambrosus/airdao-nop.git
-cd airdao-nop || return
+git clone https://github.com/Eshanchik/airdao-nop-rs.git
+cd airdao-nop-rs || return
 
 ./update.sh
 
