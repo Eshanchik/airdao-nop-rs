@@ -38,7 +38,7 @@ jobs:
         RUSTFLAGS='-C link-arg=-s' cargo build --release --target x86_64-unknown-linux-gnu
 
     - name: ls
-      run: ls target/airdao-nop/release/
+      run: ls
 
     - name: Archive 
       run: zip -j airdao-nop-rs-ubuntu.zip target/x86_64-unknown-linux-gnu/release/airdao-nop-rs
