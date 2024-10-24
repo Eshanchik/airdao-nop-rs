@@ -60,7 +60,7 @@ jobs:
         asset_name: airdao-nop-release-${{ env.RELEASE_VERSION }}.zip
         asset_content_type: application/zip
 
-  build-20.04:
+  build_20_04:
     runs-on: ubuntu-20.04
 
     steps:
