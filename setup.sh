@@ -5,7 +5,6 @@ sed -i 's/^#\$nrconf{restart} = '\''i'\'';/$nrconf{restart} = '\''a'\'';/' /etc/
 
 # Install required packages
 apt-get install -y \
-    libssl-dev \
     pkg-config \
     ca-certificates \
     git \
