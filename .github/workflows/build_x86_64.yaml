@@ -16,13 +16,15 @@ jobs:
 
     - name: Get version from Cargo.toml
       id: get_version
-      run: echo "version=$(curl -s https://raw.githubusercontent.com/ambrosus/airdao-nop-rs/main/Cargo.toml | grep '^version' | sed -E 's/version = \"(.*)\"/\\1/')" >> $GITHUB_ENV
+      run: |
+        version=$(curl -s https://raw.githubusercontent.com/ambrosus/airdao-nop-rs/main/Cargo.toml | grep '^version' | sed -E 's/version = "(.*)"/\1/')
+        echo "VERSION=$version" >> $GITHUB_ENV
 
     - name: Create Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release create "v${{ env.version }}" --title "Release v${{ env.version }}" --notes "Automated release based on merged PR."
+        gh release create "v${VERSION}" --title "Release v${VERSION}" --notes "Automated release based on merged PR."
 
     - name: Set up Rust
       uses: actions-rs/toolchain@v1
@@ -54,6 +56,11 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_version.outputs.upload_url }}
+        asset_path: ./airdao-nop-rs-x86-64.zip
+        asset_name: airdao-nop-rs-x86-64.zip
+        asset_content_type: application/zip
       with:
         upload_url: ${{ github.event.repository.releases[0].upload_url }}
         asset_path: ./airdao-nop-rs-x86-64.zip
