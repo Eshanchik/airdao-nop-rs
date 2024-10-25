@@ -6,7 +6,6 @@ sed -i 's/^#\$nrconf{restart} = '\''i'\'';/$nrconf{restart} = '\''a'\'';/' /etc/
 # Install required packages
 apt-get install -y \
     pkg-config \
-    ca-certificates \
     git \
     jq \
     unzip
